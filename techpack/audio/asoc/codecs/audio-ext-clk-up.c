@@ -47,7 +47,7 @@ struct audio_ext_ap_clk {
 
 struct audio_ext_pmi_clk {
 	int gpio;
-	struct clk_dummy hw;
+	struct clk_fixed_factor fact;
 };
 
 struct audio_ext_ap_clk2 {
@@ -327,21 +327,29 @@ static const struct clk_ops audio_ext_clk_dummy_ops = {
 
 static struct audio_ext_pmi_clk audio_pmi_clk = {
 	.gpio = -EINVAL,
-	.hw.hw.init = &(struct clk_init_data){
-		.name = "audio_ext_pmi_clk",
-		.parent_names = (const char *[]){ "div_clk1" },
-		.num_parents = 1,
-		.ops = &clk_dummy_ops,
+	.fact = {
+		.mult = 1,
+		.div = 1,
+		.hw.init = &(struct clk_init_data){
+			.name = "audio_ext_pmi_clk",
+			.parent_names = (const char *[]){ "div_clk1" },
+			.num_parents = 1,
+			.ops = &clk_dummy_ops,
+		},
 	},
 };
 
 static struct audio_ext_pmi_clk audio_pmi_lnbb_clk = {
 	.gpio = -EINVAL,
-	.hw.hw.init = &(struct clk_init_data){
-		.name = "audio_ext_pmi_lnbb_clk",
-		.parent_names = (const char *[]){ "ln_bb_clk3" },
-		.num_parents = 1,
-		.ops = &clk_dummy_ops,
+	.fact = {
+		.mult = 1,
+		.div = 1,
+		.hw.init = &(struct clk_init_data){
+			.name = "audio_ext_pmi_lnbb_clk",
+			.parent_names = (const char *[]){ "ln_bb_clk3" },
+			.num_parents = 1,
+			.ops = &audio_ext_clk_dummy_ops,
+		},
 	},
 };
 
@@ -395,7 +403,7 @@ static struct audio_ext_lpass_mclk audio_lpass_mclk2 = {
 };
 
 static struct clk_hw *audio_msm_hws[] = {
-	&audio_pmi_clk.hw.hw,
+	&audio_pmi_clk.fact.hw,
 	&audio_ap_clk.fact.hw,
 	&audio_ap_clk2.fact.hw,
 	&audio_lpass_mclk.fact.hw,
@@ -403,7 +411,7 @@ static struct clk_hw *audio_msm_hws[] = {
 };
 
 static struct clk_hw *audio_msm_hws1[] = {
-	&audio_pmi_lnbb_clk.hw.hw,
+	&audio_pmi_lnbb_clk.fact.hw,
 };
 
 static int audio_get_pinctrl(struct platform_device *pdev,

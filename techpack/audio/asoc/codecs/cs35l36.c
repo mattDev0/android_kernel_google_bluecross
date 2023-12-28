@@ -870,10 +870,6 @@ static int cs35l36_boost_inductor(struct cs35l36_private *cs35l36, int inductor)
 	return 0;
 }
 
-#define CONFIG_SOUND_CONTROL
-#ifdef CONFIG_SOUND_CONTROL
-extern struct snd_soc_codec *cs35l36_codec;
-#endif
 static int cs35l36_codec_probe(struct snd_soc_codec *codec)
 {
 	struct cs35l36_private *cs35l36 = snd_soc_codec_get_drvdata(codec);
@@ -1041,11 +1037,6 @@ static int cs35l36_codec_probe(struct snd_soc_codec *codec)
 	}
 
 	snd_soc_dapm_sync(dapm);
-
-#ifdef CONFIG_SOUND_CONTROL
-	cs35l36_codec = codec;
-#endif
-
 	return 0;
 }
 
